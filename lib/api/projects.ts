@@ -15,6 +15,7 @@ export type DbProject = {
   direccion: string | null;
   fecha_visita: string | null;
   fecha_instalacion: string | null;
+  probability: number | null;
   created_at: string;
   updated_at: string;
 };
@@ -31,7 +32,7 @@ function toProject(db: ProjectWithContact): Project {
     contact_id: db.contact_id,
     email: db.email ?? "",
     value: db.value ?? 0,
-    stage: db.stage ?? "Lead",
+    stage: db.stage ?? "lead",
     status: db.status,
     closeDate: db.close_date ?? "",
     rep: db.rep ?? "",
@@ -54,6 +55,7 @@ type ProjectRow = {
   direccion: string | null;
   fecha_visita: string | null;
   fecha_instalacion: string | null;
+  probability: number | null;
   created_at: string;
   updated_at: string;
 };
@@ -80,8 +82,13 @@ export async function fetchProjectsByContact(contactId: string): Promise<Project
 }
 
 export async function createProject(input: {
-  contact_id: string;
+  contact_id?: string;
   company: string;
+  value?: number;
+  stage?: string;
+  rep?: string;
+  email?: string;
+  probability?: number;
   direccion?: string;
 }): Promise<Project> {
   const id = await generateId("PRY");
@@ -89,8 +96,13 @@ export async function createProject(input: {
     .from("projects")
     .insert({
       id,
-      contact_id: input.contact_id,
+      contact_id: input.contact_id || null,
       company: input.company,
+      value: input.value ?? 0,
+      stage: input.stage ?? "lead",
+      rep: input.rep || null,
+      email: input.email || null,
+      probability: input.probability ?? null,
       direccion: input.direccion || null,
     });
 
@@ -117,6 +129,7 @@ export async function updateProject(id: string, input: Partial<{
   direccion: string;
   fecha_visita: string;
   fecha_instalacion: string;
+  probability: number;
 }>): Promise<Project> {
   const { error } = await supabase
     .from("projects")

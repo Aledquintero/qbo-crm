@@ -17,6 +17,7 @@ export interface Project {
   direccion?: string | null;
   fecha_visita?: string | null;
   fecha_instalacion?: string | null;
+  probability?: number | null;
 }
 
 export const projects: Project[] = [

@@ -9,3 +9,5 @@ export { projectPhotos } from "./project_photos";
 export { contracts } from "./contracts";
 export { designs } from "./designs";
 export { paymentReceipts } from "./payment_receipts";
+export { customers } from "./customers";
+export { team } from "./team";

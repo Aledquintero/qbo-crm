@@ -11,22 +11,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { month: "Jan", revenue: 186000, target: 180000 },
-  { month: "Feb", revenue: 205000, target: 190000 },
-  { month: "Mar", revenue: 237000, target: 200000 },
-  { month: "Apr", revenue: 273000, target: 220000 },
-  { month: "May", revenue: 209000, target: 230000 },
-  { month: "Jun", revenue: 314000, target: 250000 },
-  { month: "Jul", revenue: 352000, target: 270000 },
-  { month: "Aug", revenue: 389000, target: 290000 },
-  { month: "Sep", revenue: 421000, target: 310000 },
-  { month: "Oct", revenue: 458000, target: 330000 },
-  { month: "Nov", revenue: 492000, target: 350000 },
-  { month: "Dec", revenue: 547000, target: 380000 },
-];
+export type RevenuePoint = { month: string; revenue: number; target: number };
 
-export function RevenueChart() {
+export function RevenueChart({ data }: { data: RevenuePoint[] }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {

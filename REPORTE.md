@@ -113,15 +113,17 @@ auth /health  → 200
 
 ## 7. Plan de trabajo priorizado (recomendado)
 
-### Fase 0 — Cimiento (bloquea todo) · Urgente
-- [ ] Reanimar/accesible Supabase (restablecer proyecto o corregir credenciales `.env.local`; verificar REST + Storage bucket `project-files`).
-- [ ] Configurar **SSL/conforme** el dominio del proyecto (`gh may`).
+### Fase 0 — Cimiento (bloquea todo) · ✅ COMPLETADA
+- [x] Verificar/restablecer acceso a Supabase (REST + Storage bucket `project-files`) → **operativo**.
+- [x] Prueba E2E del CRUD y subida de archivos → **funcional**.
+- [x] Eliminar módulo huérfano `lib/api/quotations.ts` (tabla inexistente).
 
-### Fase 1 — Base real del CRM — Alta
-- [ ] Implementar **login/registro de usuarios** (Auth) + aislamiento por usuario.
-- [ ] Conectar **Overview** a datos reales (métricas + recharts desde DB).
-- [ ] **Pipeline**: implementar drag-and-drop y persistir cambios de stage.
-- [ ] **CRUD de Customers y Team** (create/read/update/delete).
+### Fase 1 — Base real del CRM — ✅ COMPLETADA (auth suspendida por ahora)
+- [x] Conectar **Overview** a datos reales (métricas + gráficos desde Supabase).
+- [x] **Pipeline**: drag-and-drop real que persiste cambios de stage.
+- [x] **CRUD de Customers** (create/read/update/delete) — tabla `customers` creada en Supabase.
+- [x] **CRUD de Team** (create/read/update/delete) — tabla `team` creada en Supabase.
+- [ ] ~~Implementar login/registro~~ → **SUSPENDIDA**: un solo usuario por ahora; se añadirá al final cuando la app esté lista.
 
 ### Fase 2 — Cierre de funcionalidad — Media
 - [ ] **Settings persistente** (Save real).

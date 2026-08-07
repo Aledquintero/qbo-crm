@@ -2,20 +2,23 @@
 
 import { useState, useEffect } from "react";
 
-const stages = [
-  { name: "Lead", value: 45, count: 892, color: "bg-chart-1" },
-  { name: "Qualified", value: 28, count: 556, color: "bg-chart-2" },
-  { name: "Proposal", value: 18, count: 357, color: "bg-chart-3" },
-  { name: "Negotiation", value: 9, count: 179, color: "bg-accent" },
-];
+export type PipelineStage = { name: string; value: number; count: number };
 
-export function PipelineChart() {
+export function PipelineChart({
+  stages,
+  totalValue,
+}: {
+  stages: PipelineStage[];
+  totalValue: number;
+}) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 400);
     return () => clearTimeout(timer);
   }, []);
+
+  const colors = ["bg-chart-1", "bg-chart-2", "bg-chart-3", "bg-accent"];
 
   return (
     <div className="bg-card border border-border rounded-xl p-5 h-[380px] animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
@@ -36,7 +39,7 @@ export function PipelineChart() {
             </div>
             <div className="h-2 bg-secondary rounded-full overflow-hidden">
               <div
-                className={`h-full ${stage.color} rounded-full transition-all duration-1000 ease-out`}
+                className={`h-full ${colors[index % colors.length]} rounded-full transition-all duration-1000 ease-out`}
                 style={{
                   width: isLoaded ? `${stage.value}%` : "0%",
                   transitionDelay: `${index * 150}ms`,
@@ -51,7 +54,11 @@ export function PipelineChart() {
       <div className="mt-6 pt-5 border-t border-border">
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Total Pipeline Value</span>
-          <span className="text-xl font-bold text-foreground">$4.8M</span>
+          <span className="text-xl font-bold text-foreground">
+            {totalValue >= 1_000_000
+              ? `$${(totalValue / 1_000_000).toFixed(1)}M`
+              : `$${(totalValue / 1000).toFixed(0)}k`}
+          </span>
         </div>
       </div>
     </div>

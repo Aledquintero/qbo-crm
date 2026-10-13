@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QBO CRM - Prototipo Mobile</title>
+<style>
+:root{--bg:#f6f6f8;--card:#fff;--ink:#111113;--mut:#6b6b70;--line:#e8e8ec;--acc:#0a84ff;--ok:#30d158;--warn:#ff9f0a;--r:20px;--tab:72px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#111;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,DM Sans,sans-serif;color:var(--ink);display:flex;justify-content:center;min-height:100vh}
+.phone{width:390px;max-width:100vw;min-height:100vh;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:500px){.phone{margin:16px 0;border-radius:44px;min-height:844px;max-height:900px;border:10px solid #000;box-shadow:0 30px 80px rgba(0,0,0,.5)}}
+header{position:sticky;top:0;z-index:5;background:rgba(246,246,248,.9);backdrop-filter:blur(16px);padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+h1{font-size:22px;margin:0;letter-spacing:-.02em}
+.sub{color:var(--mut);font-size:13px;margin-top:2px}
+.search{margin:10px 16px 0;position:sticky;top:0;z-index:4}
+.search input{width:100%;height:46px;border-radius:14px;border:1px solid var(--line);padding:0 14px 0 38px;font-size:16px;background:#fff;outline:none}
+.search span{position:absolute;left:12px;top:13px;color:var(--mut)}
+main{flex:1;overflow-y:auto;padding:12px 12px calc(var(--tab) + 28px);-webkit-overflow-scrolling:touch}
+.sec{display:none}.sec.on{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px}
+.kpi b{font-size:18px}.kpi i{font-style:normal;font-size:11px;color:var(--mut);display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:10px;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.card h3{margin:0 0 4px;font-size:16px}.card p{margin:0;color:var(--mut);font-size:13px}
+.row{display:flex;gap:8px;margin-top:10px}
+.chip{font-size:12px;padding:5px 10px;border-radius:999px;background:#eef4ff;color:#0a84ff;border:1px solid #d6e6ff}
+.chip.warn{background:#fff4e5;color:#b26a00;border-color:#ffe0b3}.chip.ok{background:#e9f9ee;color:#14743a;border-color:#c4ecd0}
+.btn{flex:1;height:48px;border-radius:14px;border:0;font-size:16px;font-weight:600;cursor:pointer}
+.btn.p{background:var(--ink);color:#fff}.btn.s{background:#ededf0;color:var(--ink)}.btn.a{background:var(--acc);color:#fff}
+.swipe{overflow:hidden;border-radius:var(--r);margin-bottom:10px}
+.swipe-in{display:flex;transition:transform .25s ease;background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+.swipe-main{flex:0 0 100%;padding:14px}
+.swipe-act{flex:0 0 140px;display:flex}
+.swipe-act button{flex:1;border:0;color:#fff;font-weight:700;font-size:13px}
+nav{position:absolute;bottom:0;left:0;right:0;height:calc(var(--tab) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);z-index:10}
+nav button{border:0;background:none;font-size:10px;color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:44px}
+nav button.on{color:var(--ink);font-weight:700}
+nav button em{font-style:normal;font-size:22px}
+.sheet{position:absolute;inset:0;z-index:20;display:none}
+.sheet.on{display:block}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+.panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;max-height:88%;display:flex;flex-direction:column;animation:up .28s cubic-bezier(.32,.72,0,1)}
+@keyframes up{from{transform:translateY(30px);opacity:.5}to{transform:none;opacity:1}}
+.grab{width:40px;height:5px;border-radius:99px;background:#ddd;margin:10px auto 4px}
+.phead{padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+.pbody{padding:6px 16px 16px;overflow-y:auto}
+.pfoot{padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);display:flex;gap:8px;background:#fff}
+.x{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#f5f5f7;font-size:18px}
+input,select{font-size:16px!important}
+.f{margin:10px 0}.f label{font-size:13px;color:var(--mut);display:block;margin-bottom:6px}.f input,.f select{width:100%;height:52px;border-radius:14px;border:1px solid var(--line);padding:0 14px}
+.steps{display:flex;gap:6px;margin:8px 0}.steps i{height:4px;flex:1;background:#e5e5ea;border-radius:99px}.steps i.on{background:var(--ink)}
+.note{background:#fff;border:1px dashed #c9c9d1;border-radius:14px;padding:10px;font-size:13px;color:var(--mut);margin-top:10px}
+.toast{position:absolute;left:16px;right:16px;bottom:calc(var(--tab) + 16px);background:#111;color:#fff;padding:12px 14px;border-radius:14px;font-size:14px;display:none;z-index:30}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+<header><h1 id="title">Inicio</h1><div class="sub">Prototipo local · no producción · 390px</div></header>
+<div class="search" id="searchWrap"><span>⌕</span><input id="q" inputmode="search" placeholder="Buscar en esta sección…"></div>
+<main>
+<section class="sec on" id="s-home">
+<div class="kpis"><div class="kpi"><b>12</b><i>Deals activos</i></div><div class="kpi"><b>$84k</b><i>Pipeline</i></div><div class="kpi"><b>5</b><i>Visitas hoy</i></div></div>
+<div class="card"><h3>Buenos días, Bruno</h3><p>Tienes 2 cotizaciones por vencer y 1 firma pendiente.</p><div class="row"><button class="btn a" onclick="go('pipeline')">Ver pipeline</button><button class="btn s" onclick="openSheet('wizard')">+ Nuevo</button></div></div>
+<div class="card"><h3>Firma pendiente — Torre del Mar</h3><p>Contrato listo para firma con dedo · pdf-lib</p><div class="row"><span class="chip warn">Por firmar</span><span class="chip">$18,500</span></div><div class="row"><button class="btn p" onclick="toast('Firma demo: abre sheet fullscreen')">Firmar</button></div></div>
+<div class="note">PWA base + offline lectura irían aquí con badge “Sin conexión”. Push y biometría fuera de v1 por decisión.</div>
+</section>
+<section class="sec" id="s-pipeline">
+<div class="card"><h3>Pipeline · Desliza o filtra</h3><p>Kanban simplificado a lista con swipe. Filtros en bottom-sheet.</p><div class="row"><button class="btn s" onclick="openSheet('filters')">Filtros (2)</button><button class="btn p" onclick="toast('Pull-to-refresh demo')">↻ Actualizar</button></div></div>
+<div id="plist"></div>
+</section>
+<section class="sec" id="s-deals">
+<div class="card"><h3>Proyectos · Cards 48px CTA</h3><p>Tabla desktop se mantiene, aquí solo cards.</p><div class="row"><button class="btn a" onclick="openSheet('wizard')">+ Nuevo proyecto</button></div></div>
+<div id="dlist"></div>
+</section>
+<section class="sec" id="s-contacts">
+<div id="clist"></div>
+</section>
+<section class="sec" id="s-more">
+<div class="card"><h3>Más</h3><p>Customers · Team · Settings · Personalizar (admin)</p></div>
+<div class="card"><h3>Sesión persistente</h3><p>Sin biometría por decisión Q13. Mismos roles.</p><div class="row"><button class="btn s" onclick="toast('Cerrar sesión demo')">Cerrar sesión</button></div></div>
+<div class="card"><h3>Sistema</h3><p>Tema system + densidad aireada. Safe-area mínimo.</p></div>
+</section>
+</main>
+<nav id="tabs">
+<button data-s="home" class="on" onclick="go('home')"><em>●</em>Inicio</button>
+<button data-s="pipeline" onclick="go('pipeline')"><em>◈</em>Pipeline</button>
+<button data-s="deals" onclick="go('deals')"><em>▣</em>Proyectos</button>
+<button data-s="contacts" onclick="go('contacts')"><em>○</em>Contactos</button>
+<button data-s="more" onclick="go('more')"><em>☰</em>Más</button>
+</nav>
+<div class="sheet" id="sheet-detail"><div class="scrim" onclick="closeSheets()"></div><div class="panel"><div class="grab"></div><div class="phead"><b id="dtitle">Detalle</b><button class="x" onclick="closeSheets()">✕</button></div><div class="pbody" id="dbody"></div><div class="pfoot"><button class="btn s" onclick="toast('Llamar demo')">Llamar</button><button class="btn p" onclick="toast('Avanzar etapa demo');vibrate()">Avanzar</button></div></div></div>
+<div class="sheet" id="sheet-filters"><div class="scrim" onclick="closeSheets()"></div><div class="panel"><div class="grab"></div><div class="phead"><b>Filtros</b><button class="x" onclick="closeSheets()">✕</button></div><div class="pbody"><div class="row"><span class="chip">Nuevo</span><span class="chip">En obra</span><span class="chip ok">Por firmar</span><span class="chip warn">Vencido</span></div><div class="note">Guardar 1 vista por defecto en localStorage.</div></div><div class="pfoot"><button class="btn s" onclick="closeSheets()">Limpiar</button><button class="btn p" onclick="closeSheets();toast('Filtros aplicados')">Aplicar</button></div></div></div>
+<div class="sheet" id="sheet-wizard"><div class="scrim" onclick="closeSheets()"></div><div class="panel"><div class="grab"></div><div class="phead"><b id="wtitle">Nuevo · Paso 1/4</b><button class="x" onclick="closeSheets()">✕</button></div><div class="pbody"><div class="steps" id="wsteps"><i class="on"></i><i></i><i></i><i></i></div><div id="wbody"></div></div><div class="pfoot"><button class="btn s" onclick="wprev()">Atrás</button><button class="btn p" id="wnext" onclick="wnext()">Siguiente</button></div></div></div>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+const P=[{t:"Casa Lomas — Cotización",s:"Nuevo · $24,000",c:"Nuevo"},{t:"Torre del Mar — Contrato",s:"Por firmar · $18,500",c:"Por firmar"},{t:"Nave Sur — Obra",s:"En obra · $42,000",c:"En obra"}];
+const D=[{t:"Residencial Alba",s:"Avance 60% · entrega mar"},{t:"Local Centro",s:"Remodelación · $12,300"}];
+const C=[{n:"María Torres",s:"+52 1 55 1234 · m@t.com"},{n:"Juan Pérez",s:"+52 1 55 9876 · j@p.com"},{n:"Obra Sur",s:"Contacto obra · Luis"}];
+let step=1;
+function go(s){document.querySelectorAll('.sec').forEach(e=>e.classList.remove('on'));document.getElementById('s-'+s).classList.add('on');document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));document.getElementById('title').textContent={home:'Inicio',pipeline:'Pipeline',deals:'Proyectos',contacts:'Contactos',more:'Más'}[s];document.getElementById('searchWrap').style.display=(s==='home'||s==='more')?'none':'';document.querySelector('main').scrollTop=0}
+function swipeCard(t,s,actions){return `<div class="swipe"><div class="swipe-in" data-x="0"><div class="swipe-main"><h3>${t}</h3><p>${s}</p><div class="row"><span class="chip">${actions[0]}</span><button class="btn s" onclick="openDetail('${t}')">Ver</button></div></div><div class="swipe-act"><button style="background:#34c759" onclick="toast('${actions[0]} demo')">✓</button><button style="background:#0a84ff" onclick="toast('${actions[1]} demo')">✎</button></div></div></div>`}
+function render(){document.getElementById('plist').innerHTML=P.map(p=>swipeCard(p.t,p.s,['Avanzar','Editar'])).join('');document.getElementById('dlist').innerHTML=D.map(p=>swipeCard(p.t,p.s,['Ver','Editar'])).join('');document.getElementById('clist').innerHTML=C.map(c=>swipeCard(c.n,c.s,['Llamar','WhatsApp'])).join('');
+document.querySelectorAll('.swipe-in').forEach(el=>{let sx=0;el.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});el.addEventListener('touchmove',e=>{let dx=e.touches[0].clientX-sx;if(dx<-20)el.style.transform='translateX(-140px)';if(dx>20)el.style.transform='translateX(0)'},{passive:true})});}
+function openDetail(t){document.getElementById('dtitle').textContent=t;document.getElementById('dbody').innerHTML=`<p style="color:#6b6b70">Sheet fullscreen demo con CTA sticky 52px + safe-area. Aquí iría ProjectDetail / ContactDetail real.</p><div class="f"><label>Nota rápida</label><input placeholder="Escribe nota…"></div><div class="f"><label>Foto / escanear</label><input type="file" accept="image/*" capture="environment"></div>`;openSheet('detail')}
+function openSheet(id){closeSheets();document.getElementById('sheet-'+id).classList.add('on');if(id==='wizard')wrender()}
+function closeSheets(){document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('on'))}
+function wbodies(){return {1:`<div class="f"><label>Nombre</label><input placeholder="Ej. Casa Lomas"></div><div class="f"><label>Teléfono</label><input inputmode="tel" placeholder="+52…"></div>`,2:`<div class="f"><label>Monto</label><input inputmode="decimal" placeholder="$0.00"></div><div class="f"><label>Etapa</label><select><option>Nuevo</option><option>En obra</option><option>Por firmar</option></select></div>`,3:`<div class="f"><label>Foto / ticket (OCR demo)</label><input type="file" accept="image/*" capture="environment"></div><div class="note">Usaría POST /api/quotes/extract existente.</div>`,4:`<div class="card"><h3>Revisar</h3><p>Guarda borrador en localStorage. Firma con dedo en paso real.</p></div>`}[step]}
+function wrender(){document.getElementById('wtitle').textContent=`Nuevo · Paso ${step}/4`;document.getElementById('wbody').innerHTML=wbodies();document.querySelectorAll('#wsteps i').forEach((e,i)=>e.classList.toggle('on',i<step));document.getElementById('wnext').textContent=step===4?'Crear':'Siguiente'}
+function wnext(){if(step<4){step++;wrender()}else{closeSheets();toast('Creado (demo)');vibrate();step=1}}
+function wprev(){if(step>1){step--;wrender()}else closeSheets()}
+function toast(m){let t=document.getElementById('toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',1800)}
+function vibrate(){if(navigator.vibrate)navigator.vibrate(10)}
+document.getElementById('q').addEventListener('input',e=>{let v=e.target.value.toLowerCase();document.querySelectorAll('.swipe').forEach(s=>s.style.display=s.textContent.toLowerCase().includes(v)?'':'none')});
+render();
+</script>
+</body>
+</html>

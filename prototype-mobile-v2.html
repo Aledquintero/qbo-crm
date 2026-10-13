@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QBO modular — Mobile pulido</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--background:#fef7ff;--foreground:#1d1b20;--card:#f3edf7;--secondary:#e8def8;--muted-fg:#49454f;--accent:#6750a4;--accent-fg:#ffffff;--border:#cac4d0;--sidebar:#f3edf7;--sidebar-ac:#e8def8}
+.dark{--background:#141218;--foreground:#e6e0e9;--card:#1d1b20;--secondary:#2b2930;--muted-fg:#cac4d0;--accent:#d0bcff;--accent-fg:#381e72;--border:#49454f;--sidebar:#141218;--sidebar-ac:#2b2930}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:#000;font-family:Roboto,"SamsungOne",system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;justify-content:center;color:var(--foreground);overflow:hidden}
+/* cero scrollbars en todo el prototipo */
+.phone *, .phone{scrollbar-width:none!important;-ms-overflow-style:none!important}
+.phone *::-webkit-scrollbar{display:none!important}
+.phone{width:390px;max-width:100vw;height:100dvh;background:var(--background);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:520px){.phone{height:min(880px,calc(100dvh - 28px));margin:14px 0;border-radius:44px;border:11px solid #000}}
+.status{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;color:var(--muted-fg);flex-shrink:0}
+.topbar{height:56px;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:0 8px 0 14px;border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--background) 88%,transparent);backdrop-filter:blur(14px);z-index:20}
+.topbar h1{font-size:17px;font-weight:700;margin:0;letter-spacing:-.01em}
+.crumbs{font-size:12px;color:var(--muted-fg)}
+.logo{width:30px;height:30px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;color:#0f5132;font-weight:800;font-size:15px}
+.avatar{width:32px;height:32px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--accent),#38bdf8);color:#fff;font-size:11px;font-weight:700}
+.iconbtn{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:0;background:transparent;color:var(--muted-fg);font-size:18px}
+.onehead{padding:18px 20px 8px;background:var(--background)}
+.big{font-size:28px;font-weight:400;letter-spacing:0;margin:0 0 14px}
+.search.one input{height:56px;border-radius:28px;background:var(--secondary);font-size:16px}
+.list{background:var(--card);border-radius:28px;margin:10px 14px;border:1px solid transparent;overflow:hidden;border-top:1px solid transparent;border-bottom:1px solid transparent}
+.fab{border-radius:18px;width:58px;height:58px}
+nav button.on{background:none;color:var(--foreground)}
+nav button.on svg{background:var(--secondary);border-radius:999px;padding:4px 16px;width:56px;height:32px;stroke:var(--foreground)}
+.row{min-height:68px}
+nav{border-top:0;box-shadow:0 -1px 12px rgba(0,0,0,.18);border-radius:0}
+nav button.on{background:none;color:var(--accent)}
+nav button.on::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--accent);margin-top:2px}
+.subbar{display:none}
+.search{position:relative;flex:1}
+.search i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted-fg);font-style:normal;font-size:14px}
+.search input{width:100%;height:40px;padding-left:34px;border-radius:12px;background:var(--secondary);border:1px solid transparent;font-size:15px;color:var(--foreground);outline:none}
+.search input:focus{border-color:var(--accent)}
+.seg{display:flex;background:var(--secondary);border-radius:12px;padding:3px;flex-shrink:0}
+.seg button{border:0;background:none;font:600 13px inherit;color:var(--muted-fg);padding:7px 12px;border-radius:9px}
+.seg button.on{background:var(--card);color:var(--foreground);box-shadow:0 1px 2px rgba(0,0,0,.2)}
+main{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:4px 0 130px}
+.sec{display:none}.sec.on{display:block}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:6px 14px 10px;scroll-snap-type:x mandatory}
+.chip{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--border);background:var(--card);font-size:13px;color:var(--muted-fg)}
+.chip.on{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card))}
+.list{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.row{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border);min-height:64px}
+.row:last-child{border-bottom:0}
+.row:active{background:var(--secondary)}
+.check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--muted-fg);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent}
+.check.done{border-color:var(--accent);background:var(--accent);color:var(--accent-fg)}
+.av{width:36px;height:36px;border-radius:10px;background:var(--secondary);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted-fg);flex-shrink:0}
+.tt{font-size:15px;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ss{font-size:13px;color:var(--muted-fg);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ss.red{color:#f87171;font-weight:600}
+.right{margin-left:auto;text-align:right;flex-shrink:0}
+.val{font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:500}
+.badge{display:inline-flex;align-items:center;gap:5px;margin-top:5px;padding:3px 8px;border-radius:999px;border:1px solid;font-size:11px;font-weight:600}
+.badge i{width:6px;height:6px;border-radius:50%}
+.board{display:flex;gap:10px;overflow-x:auto;padding:4px 14px 8px;scroll-snap-type:x mandatory}
+.bcol{width:262px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:10px;scroll-snap-align:start}
+.bcol h4{margin:2px 2px 10px;font-size:13px;display:flex;align-items:center;gap:7px}
+.dot{width:8px;height:8px;border-radius:50%}
+.ncard{background:var(--background);border:1px solid var(--border);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.ncard b{font-size:14px}.ncard small{font-size:12px;color:var(--muted-fg)}
+.dots{display:flex;gap:5px;justify-content:center;padding:2px 0 8px}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--border)}
+.dots i.on{background:var(--muted-fg)}
+.fab{position:absolute;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-fg);font-size:26px;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:26}
+nav{position:absolute;bottom:0;left:0;right:0;background:color-mix(in srgb,var(--sidebar) 94%,transparent);backdrop-filter:blur(18px);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);padding:6px 4px calc(8px + env(safe-area-inset-bottom));z-index:25}
+nav button{position:relative;border:0;background:none;color:var(--muted-fg);font:600 10px inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;min-height:52px;border-radius:12px}
+nav button.on{color:var(--foreground)}
+nav button.on svg{stroke:var(--accent)}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
+.sheet{position:absolute;inset:0;z-index:40;display:none}.sheet.on{display:block}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.panel{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:22px 22px 0 0;padding:8px 16px calc(14px + env(safe-area-inset-bottom));max-height:86%;overflow-y:auto}
+.grab{width:38px;height:5px;border-radius:99px;background:var(--border);margin:6px auto}
+.detail{position:absolute;inset:0;z-index:30;background:var(--background);display:none;flex-direction:column}
+.detail.on{display:flex}
+.dhead{min-height:56px;display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px solid var(--border)}
+.back{height:38px;padding:0 14px;border-radius:11px;background:var(--secondary);border:0;font:600 14px inherit;color:var(--foreground)}
+.field{margin:10px 0}.field span{font-size:13px;color:var(--muted-fg);display:block;margin-bottom:6px}
+.field input{width:100%;height:50px;border-radius:12px;background:var(--secondary);border:1px solid transparent;padding:0 14px;font-size:16px;color:var(--foreground)}
+.cta{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--card)}
+.cta button{flex:1;height:52px;border-radius:14px;border:0;font:700 15px inherit}
+.cta .s{background:var(--secondary);color:var(--foreground)}.cta .p{background:var(--accent);color:var(--accent-fg)}
+.toast{position:absolute;left:14px;right:14px;bottom:100px;background:#fff;color:#111;border-radius:12px;padding:11px 13px;font-size:13px;display:none;z-index:50}
+.dark .toast{background:#f2f3f5}
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="onehead"><div class="big" id="bigTitle">Pipeline</div><div class="search one"><i>⌕</i><input id="q" placeholder="Buscar" oninput="onSearch(this.value)"></div></div>
+<main id="main">
+<section class="sec on" id="s-pipeline">
+<div class="chips"><span class="chip on" id="chipBoard" onclick="segMode('board',this)">Tablero</span><span class="chip" id="chipList" onclick="segMode('list',this)">Lista</span><span class="chip">◷ 1 estancados</span><span class="chip">📅 2 sin visita</span></div>
+<div id="boardWrap"><div class="board" id="board"></div><div class="dots"><i class="on"></i><i></i><i></i></div></div>
+<div id="plist" style="display:none" class="list"></div>
+</section>
+<section class="sec" id="s-deals"><div class="chips"><span class="chip on">Todos</span><span class="chip">Por firmar</span><span class="chip">En obra</span><span class="chip">Vencidos</span></div><div class="list" id="dlist"></div></section>
+<section class="sec" id="s-contacts"><div class="list" id="clist"></div></section>
+<section class="sec" id="s-home"><div class="list"><div class="row"><div class="av">☀</div><div><div class="tt">Buenos días, Bruno</div><div class="ss">2 cotizaciones por vencer · 1 firma pendiente</div></div></div></div></section>
+<section class="sec" id="s-more"><div class="list"><div class="row"><div class="av">⋯</div><div><div class="tt">Customers · Team · Reports</div><div class="ss">Fuera de Fase 1 · Settings abajo</div></div></div><div class="row"><div class="av">⚙</div><div><div class="tt">Settings</div><div class="ss">Tema system · sesión persistente</div></div></div></div></section>
+<div class="detail" id="detail"><div class="dhead"><button class="back" onclick="closeDetail()">‹ Atrás</button><b id="dtitle">Detalle</b></div><div style="flex:1;overflow-y:auto;padding:6px 0 16px" id="dbody"></div><div class="cta"><button class="s" onclick="toast('Llamar demo')">Llamar</button><button class="p" onclick="toast('Guardado')">Guardar</button></div></div>
+</main>
+<button class="fab" onclick="openSheet()">+</button>
+<nav id="tabs">
+<button data-s="home" onclick="go('home',this,'Overview')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Inicio</button>
+<button data-s="pipeline" class="on" onclick="go('pipeline',this,'Pipeline')"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8.5 6H15a3 3 0 0 1 3 3v6.5M15.5 18H9a3 3 0 0 1-3-3V8.5"/></svg>Pipeline</button>
+<button data-s="deals" onclick="go('deals',this,'Proyectos')"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Proyectos</button>
+<button data-s="contacts" onclick="go('contacts',this,'Contactos')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M5.5 16c.6-1.5 2-2.5 3.5-2.5s2.9 1 3.5 2.5M16 9.5h3M16 13h3"/></svg>Contactos</button>
+<button data-s="more" onclick="go('more',this,'Más')"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>Más</button>
+</nav>
+<div class="sheet" id="sheet"><div class="scrim" onclick="closeSheets()"></div><div class="panel"><div class="grab"></div><h3 style="margin:4px 0 8px">Nuevo — 1/4</h3><div class="field"><span>Nombre proyecto</span><input value="Casa Lomas"></div><div class="field"><span>Teléfono</span><input inputmode="tel" value="+52 1 55…"></div><div class="field"><span>Foto / ticket</span><input type="file" accept="image/*" capture="environment"></div><div class="cta" style="border:0;padding:12px 0 0"><button class="s" onclick="closeSheets()">Cerrar</button><button class="p" onclick="closeSheets();toast('Creado')">Siguiente</button></div></div></div>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+const deals=[{e:"Casa Lomas",c:"María Torres",v:"$24,000",s:"Nuevo",sc:"#38bdf8",m:"Sin visita · 2d"},{e:"Torre del Mar",c:"Ana Ruiz",v:"$18,500",s:"Por firmar",sc:"#34d399",m:"Firma pendiente · 1d"},{e:"Nave Sur",c:"Luis Mora",v:"$42,000",s:"En obra",sc:"#a78bfa",m:"Estancado · 9d",red:true}];
+const contacts=[{n:"María Torres",e:"m@t.com · 1 proyecto",p:"Llamar"},{n:"Juan Pérez",e:"j@p.com",p:"WhatsApp"}];
+function rowDeal(d){return `<div class="row" data-t="${(d.e+d.c).toLowerCase()}" onclick="openDetail('${d.e}')"><div class="check" onclick="event.stopPropagation();this.classList.toggle('done');this.textContent=this.classList.contains('done')?'✓':''"></div><div class="av">${d.e[0]}</div><div style="min-width:0;flex:1"><div class="tt">${d.e}</div><div class="ss ${d.red?'red':''}">${d.c} · ${d.m}</div><span class="badge" style="border-color:${d.sc}55;color:${d.sc}"><i style="background:${d.sc}"></i>${d.s}</span></div><div class="right"><div class="val">${d.v}</div><div class="ss">›</div></div></div>`}
+function render(){document.getElementById('board').innerHTML=[{n:"Nuevo",c:"#38bdf8"},{n:"Visita",c:"#a78bfa"},{n:"Por firmar",c:"#34d399"}].map(s=>{const cards=deals.filter(d=>d.s===s.n||(s.n==="Visita"&&d.s==="En obra"));return `<div class="bcol"><h4><span class="dot" style="background:${s.c}"></span>${s.n} · ${cards.length}</h4>${cards.map(c=>`<div class="ncard" onclick="openDetail('${c.e}')"><b>${c.e}</b><br><small>${c.c} · ${c.m}</small></div>`).join('')||'<div class="ncard"><small>Arrastra aquí</small></div>'}</div>`}).join('');
+document.getElementById('plist').innerHTML=deals.map(rowDeal).join('');
+document.getElementById('dlist').innerHTML=deals.map(rowDeal).join('');
+document.getElementById('clist').innerHTML=contacts.map(c=>`<div class="row" onclick="openDetail('${c.n}')"><div class="av">${c.n[0]}</div><div style="flex:1;min-width:0"><div class="tt">${c.n}</div><div class="ss">${c.e}</div></div><div class="right"><span class="badge" style="border-color:var(--border);color:var(--muted-fg)">${c.p}</span></div></div>`).join('')}
+function go(s,btn,t){document.querySelectorAll('.sec').forEach(e=>e.classList.remove('on'));document.getElementById('s-'+s).classList.add('on');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('bigTitle').textContent=t;document.getElementById('main').scrollTop=0}
+function segMode(m,btn){document.getElementById('chipBoard').classList.toggle('on',m==='board');document.getElementById('chipList').classList.toggle('on',m==='list');document.getElementById('boardWrap').style.display=m==='board'?'':'none';document.getElementById('plist').style.display=m==='board'?'none':''}
+function onSearch(v){v=v.toLowerCase();document.querySelectorAll('.sec.on .row').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(v)?'':'none')}
+function openDetail(t){document.getElementById('dtitle').textContent=t;document.getElementById('dbody').innerHTML=`<div class="list"><div class="row"><div class="av">${t[0]}</div><div><div class="tt">${t}</div><div class="ss">Mismo detalle desktop · badge etapa · fechas</div></div></div><div class="row"><div style="flex:1"><div class="tt" style="font-size:14px">Nota rápida</div><div class="ss">Input 50px, sin zoom iOS</div></div></div></div>`;document.getElementById('detail').classList.add('on')}
+function closeDetail(){document.getElementById('detail').classList.remove('on')}
+function openSheet(){document.getElementById('sheet').classList.add('on')}
+function closeSheets(){document.getElementById('sheet').classList.remove('on')}
+function toggleTheme(){const h=document.documentElement;h.classList.toggle('dark');document.getElementById('themeBtn').textContent=h.classList.contains('dark')?'☾':'☀'}
+function toast(m){let t=document.getElementById('toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',1700)}
+render();
+</script>
+</body>
+</html>
